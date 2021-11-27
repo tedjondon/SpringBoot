@@ -1,9 +1,11 @@
 package com.zabello.springboot.controller;
 
+import com.zabello.springboot.model.Role;
 import com.zabello.springboot.model.User;
 import com.zabello.springboot.service.RoleService;
 import com.zabello.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,21 +27,12 @@ public class AdminsController {
     @GetMapping
     public String index(Model model) {
         List<User> users = userService.listUsers();
-        model.addAttribute("users", users);
-        return "index";
-    }
-
-    @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute(userService.getUserById(id));
-        return "show";
-    }
-
-    @GetMapping("new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("rolesList", roleService.listRoles());
-        return "new";
+        List<Role> roles = roleService.listRoles();
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("userList", users);
+        model.addAttribute("roleList", roles);
+        model.addAttribute("currentUser", currentUser);
+        return "users";
     }
 
     @PostMapping
@@ -50,25 +43,25 @@ public class AdminsController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("rolesList", roleService.listRoles());
-        return "edit";
-    }
-
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user,
-                         @PathVariable("id") int id,
-                         @RequestParam("rolesArr") String[] role) {
-        user.setRoles(roleService.arrayToSet(role));
-        userService.updateUser(id, user);
+    @PostMapping("/edit")
+    public String editUser(@ModelAttribute User user,
+                           @RequestParam(name = "newPassword", required = false) String newPassword,
+                           @RequestParam(name = "editedUsersRoles", required = false) String[] roles) {
+        if (!newPassword.isEmpty()) {
+            user.setPassword(newPassword);
+        }
+        if (roles != null) {
+            user.setRoles(roleService.arrayToSet(roles));
+        } else {
+            user.setRoles(userService.getUserById(user.getId()).getRoles());
+        }
+        userService.updateUser(user.getId(), user);
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id) {
-        userService.deleteUser(id);
+    @PostMapping("/delete")
+    public String deleteUser(@ModelAttribute User user) {
+        userService.deleteUser(user.getId());
         return "redirect:/admin";
     }
 }

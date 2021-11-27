@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--html xmlns="http://www.w3.org/1999/xhtml"-->
+<!--<html lang="en">-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+
+    <title>Admin panel</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark flex-md p-2 justify-content-between ">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto  "> <!--px-3-->
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" th:text="${currentUser.getEmail()}"> </a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#"> With roles:</a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#"
+                   th:text="${#strings.replace(currentUser.getRoles(), 'ROLE_', '')}"></a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto"> <!--px-3-->
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+<br>
+<div class="container-fluid mt-5">
+    <div class="row vh-100">
+        <div class="col-2 nav flex-column nav-pills" id="pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active mt-3" data-toggle="pill" href="#admin" role="tab"
+               aria-controls="#admin" aria-selected="true">
+                Admin</a>
+            <a class="nav-link" data-toggle="pill" href="#user" role="tab"
+               aria-controls="user" aria-selected="false">User</a>
+        </div>
+
+        <div class="col-10 bg-light px-5">
+            <div class="tab-content" id="adminUser">
+                <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+                    <h1>Admin panel</h1>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#users" role="tab">User Table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#newUser" role="tab">New User</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="adminPanel">
+                        <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong>All users</strong>                               
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th th:text="ID"></th>
+                                            <th th:text="FirstName"></th>
+                                            <th th:text="LastName"></th>
+                                            <th th:text="Age"></th>
+                                            <th th:text="Email"></th>
+                                            <th th:text="Roles"></th>
+                                            <th th:text="Edit"></th>
+                                            <th th:text="Delete"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="users : ${userList}">
+                                            <td th:text="${users.getId()}"></td>
+                                            <td th:text="${users.getFirstName()}"></td>
+                                            <td th:text="${users.getLastName()}"></td>
+                                            <td th:text="${users.getAge()}"></td>
+                                            <td th:text="${users.getEmail()}"></td>
+                                            <td th:text="${#strings.replace(users.getRoles(), 'ROLE_', '')}"></td>
+
+                                            <td>
+                                                <button type="button" class="btn btn-info" data-toggle="modal"
+                                                        th:attr="data-target='#edit' + ${users.getId()}">
+                                                    Edit
+                                                </button>
+                                                <div class="modal fade" th:id="'edit' + ${users.getId()}" tabindex="-1"
+                                                     aria-labelledby="editModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form action="/admin/edit" method="POST">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="editModalLabel">Edit
+                                                                        user</h5>
+                                                                    <button type="button" class="close"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="editId">ID</label></strong>
+                                                                            <input id="editId"
+                                                                                   type="text"
+                                                                                   class="form-control"
+                                                                                   th:value="${users.getId()}" readonly
+                                                                                   th:attr="name='Id'"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="editFirstName">First Name</label></strong>
+                                                                            <input
+                                                                                    id="editFirstName"
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    th:value="${users.getFirstName()}"
+                                                                                    th:attr="name='firstName'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="editLastName">Last Name</label></strong>
+                                                                            <input
+                                                                                    id="editLastName"
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    th:value="${users.getLastName()}"
+                                                                                    th:attr="name='lastName'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="editAge">Age</label></strong>
+                                                                            <input
+                                                                                    id="editAge"
+                                                                                    type="number"
+                                                                                    class="form-control"
+                                                                                    th:value="${users.getAge()}"
+                                                                                    th:attr="name='Age'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label for="editEmail">Email</label></strong>
+                                                                            <input
+                                                                                    id="editEmail"
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    th:value="${users.getEmail()}"
+                                                                                    th:attr="name='Email'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="hidden"
+                                                                           th:value="${users.getPassword()}"
+                                                                           th:attr="name='Pass'"/>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label for="newPassword">New
+                                                                                password</label></strong>
+                                                                            <input
+                                                                                    id="newPassword"
+                                                                                    type="password"
+                                                                                    class="form-control"
+                                                                                    name="newPassword">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="editedUsersRoles">Роль</label></strong>
+                                                                            <select multiple name="editedUsersRoles"
+                                                                                    class="form-control" size="2"
+                                                                                    id="editedUsersRoles"
+                                                                                    th:required="false">
+                                                                                <option th:each="role : ${roleList}"
+                                                                                        th:value="${role.getRole()}"
+                                                                                        th:text="${#strings.replace(role.toString(), 'ROLE_', '')}"></option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-dismiss="modal">Close
+                                                                    </button>
+                                                                    <button type="submit"
+                                                                            class="btn btn-primary">Edit
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                        th:attr="data-target='#delete' + ${users.getId()}">
+                                                    Delete
+                                                </button>
+                                                <div class="modal fade" th:id="'delete' + ${users.getId()}"
+                                                     tabindex="-1"
+                                                     aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form action="/admin/delete" method="POST">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="deleteModalLabel">
+                                                                        Delete user</h5>
+                                                                    <button type="button" class="close"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <div class="form-group  justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="deleteId">ID</label></strong>
+                                                                            <input type="text"
+                                                                                   class="form-control"
+                                                                                   id="deleteId"
+                                                                                   th:value="${users.getId()} " readonly
+                                                                                   th:attr="name='Id'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="deleteFirstName">Name</label></strong>
+                                                                            <input type="text"
+                                                                                   class="form-control"
+                                                                                   id="deleteFirstName"
+                                                                                   th:value="${users.getFirstName()} "
+                                                                                   readonly
+                                                                                   th:attr="name='First Name'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="deleteSecondName">Name</label></strong>
+                                                                            <input type="text"
+                                                                                   class="form-control"
+                                                                                   id="deleteSecondName"
+                                                                                   th:value="${users.getLastName()} "
+                                                                                   readonly
+                                                                                   th:attr="name='Last Name'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="deleteAge">Age</label></strong>
+                                                                            <input type="text"
+                                                                                   class="form-control"
+                                                                                   id="deleteAge"
+                                                                                   th:value="${users.getAge()} "
+                                                                                   readonly
+                                                                                   th:attr="name='Age'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="deleteEmail">Email</label></strong>
+                                                                            <input type="text"
+                                                                                   class="form-control"
+                                                                                   id="deleteEmail"
+                                                                                   th:value="${users.getEmail()}"
+                                                                                   readonly
+                                                                                   th:attr="name='Email'">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group justify-content-center row">
+                                                                        <div class="col-5">
+                                                                            <strong><label
+                                                                                    for="deleteUsersRoles">Role</label></strong>
+                                                                            <select multiple
+                                                                                    name="deleteUsersRoles"
+                                                                                    class="form-control"
+                                                                                    size="2"
+                                                                                    id="deleteUsersRoles"
+                                                                                    disabled="true">
+                                                                                <option th:each="role : ${users.getRoles()}"
+                                                                                        th:value="${role.getRole()}"
+                                                                                        readonly
+                                                                                        th:text="${#strings.replace(role.toString(), 'ROLE_', '')}"></option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-dismiss="modal">Close
+                                                                    </button>
+                                                                    <button type="submit"
+                                                                            class="btn btn-danger">Delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="newUser" role="tabpanel"
+                             aria-labelledby="newUser">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong>Add new user</strong>
+                                </div>
+                                <div class="card-body">
+                                    <form class="text-center m-auto w-25" action="/admin" method="POST">
+                                        <div class="form-group">
+                                            <strong><label for="firstName"> First Name </label></strong>
+                                            <input type="text" id="firstName" name="firstName" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <strong><label for="last name"> Last Name </label></strong>
+                                            <input type="text" id="last name" name="lastName" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <strong><label for="age"> Age </label></strong>
+                                            <input type="number" id="age" name="Age" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <strong><label for="password"> Password </label></strong>
+                                            <input type="password" id="password" name="Password" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <strong><label for="Email"> Email </label></strong>
+                                            <input type="text" id="Email" name="Email"
+                                                   class="form-control">
+                                        </div>
+<!--                                        <div class="form-group">-->
+<!--                                            <strong><label for="newUsersRoles"> Роль </label></strong>-->
+<!--                                            <select multiple name="newUsersRoles" class="form-control" size="2"-->
+<!--                                                    id="newUsersRoles"-->
+<!--                                                    th:required="true">-->
+<!--                                                <option th:each="role : ${roleList}"-->
+<!--                                                        th:value="${role.getRole()}"-->
+<!--                                                        th:text="${#strings.replace(role.toString(), 'ROLE_', '')}"></option>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+                                        <div class="form-check form-check-inline" th:each="role : ${roleList}">
+                                            <input type="checkbox" class="form-check-input" name="rolesArr"  th:id="${role.role}" th:value="${role.role}">
+                                            <label class="form-check-label" th:for="${role.role}" th:text="${role.role}"/>
+                                        </div>
+
+                                        <input type="submit" class="btn btn-success mb-2" value="Add new user">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
+                    <h1>User information-page</h1>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>About user</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th th:text="id" scope="row"></th>
+                                    <th th:text="firstname"></th>
+                                    <th th:text="lastname"></th>
+                                    <th th:text="age"></th>
+                                    <th th:text="email"></th>
+                                    <th th:text="roles"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${currentUser.getId()}"></td>
+                                    <td th:text="${currentUser.getFirstName()}"></td>
+                                    <td th:text="${currentUser.getLastName()}"></td>
+                                    <td th:text="${currentUser.getAge()}"></td>
+                                    <td th:text="${currentUser.getEmail()}"></td>
+                                    <td th:text="${#strings.replace(currentUser.getRoles(), 'ROLE_', '')}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

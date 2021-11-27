@@ -13,9 +13,14 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @Column
+    private String firstName;
+    @Column
+    private String lastName;
+    @Column
+    private int age;
     @Column(unique = true)
-    private String name;
+    private String email;
     @Column
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -24,8 +29,11 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String password, Set<Role> roles) {
-        this.name = name;
+    public User(String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
         this.password = password;
         this.roles = roles;
     }
@@ -34,20 +42,44 @@ public class User implements UserDetails {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -69,7 +101,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return email;
     }
 
     @Override

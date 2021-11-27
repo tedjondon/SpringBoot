@@ -35,7 +35,7 @@ public class UserDaoImpl implements UserDao {
     @SuppressWarnings("unchecked")
     public User getUserByName(String name) {
         return em.createQuery(
-                        "SELECT user FROM User user WHERE user.name =:username", User.class)
+                        "SELECT user FROM User user WHERE user.email =:username", User.class)
                 .setParameter("username", name)
                 .getSingleResult();
     }

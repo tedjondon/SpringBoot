@@ -29,12 +29,12 @@ public class CreateUsers {
         roles.add(adminRole);
         roleService.add(userRole);
         roleService.add(adminRole);
-        User admin = new User("admin", "test", roles);
+        User admin = new User("admin", "admin", 30, "admin@mail.ru", "test", roles);
         userService.add(admin);
 
         Set<Role> roles2 = new HashSet<>();
         roles2.add(userRole);
-        User user = new User("user", "test", roles2);
+        User user = new User("user", "user", 50, "user@mail.ru", "test", roles2);
         userService.add(user);
     }
 }
