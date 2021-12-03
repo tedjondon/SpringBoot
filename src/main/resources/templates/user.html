@@ -26,7 +26,28 @@
 </head>
 <body>
 
-<div th:insert="navbar.html"></div>
+<nav class="navbar navbar-expand navbar-dark fixed-top bg-dark flex p-2 justify-content-between ">
+    <div  class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto  "> <!--px-3-->
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" th:text="${user.getFirstName()}"> </a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" > With roles:</a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" th:text="${#strings.replace(user.getRoles(), 'ROLE_', '')}"></a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto"> <!--px-3-->
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
 <br>
 <div class="container-fluid mt-5">
     <div class="row vh-100">
@@ -47,19 +68,21 @@
                                 <thead>
                                 <tr>
                                     <th th:text="id"></th>
-                                    <th th:text="name"></th>
+                                    <th th:text="firstName"></th>
+                                    <th th:text="lastName"></th>
                                     <th th:text="age"></th>
-                                    <th th:text="fruit"></th>
+                                    <th th:text="email"></th>
                                     <th th:text="roles"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td th:text="${loggedInUser.getId()}"></td>
-                                    <td th:text="${loggedInUser.getName()}"></td>
-                                    <td th:text="${loggedInUser.getAge()}"></td>
-                                    <td th:text="${loggedInUser.getFruit()}"></td>
-                                    <td th:text="${#strings.replace(loggedInUser.printRoles(), 'ROLE_', '')}"></td>
+                                    <td th:text="${user.getId()}"></td>
+                                    <td th:text="${user.getFirstName()}"></td>
+                                    <td th:text="${user.getLastName()}"></td>
+                                    <td th:text="${user.getAge()}"></td>
+                                    <td th:text="${user.getEmail()}"></td>
+                                    <td th:text="${#strings.replace(user.getRoles(), 'ROLE_', '')}"></td>
                                 </tr>
                                 </tbody>
                             </table>

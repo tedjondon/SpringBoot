@@ -1,9 +1,9 @@
 function printUserRoles(roles) {
-    let printRoles = [];
+    let getRoles = [];
     for (r in roles) {
-        printRoles += roles[r].roleName.replace(/ROLE_/gi, " ") + " ";
+        getRoles += roles[r].role.replace(/ROLE_/gi, " ") + " ";
     }
-    return printRoles;
+    return getRoles;
 }
 
 function setRolesID(someRoles) {
@@ -21,7 +21,7 @@ function rolesForSelection(roles) {
     let select = "";
     for (i in roles) {
         select +=
-            "<option value=" + roles[i].roleName + ">" + roles[i].roleName.replace(/ROLE_/gi, "") + "</option>";
+            "<option value=" + roles[i].role + ">" + roles[i].role.replace(/ROLE_/gi, "") + "</option>";
     }
     return select;
 }
@@ -43,7 +43,7 @@ function selectRoles(idSelector) {
         setRolesID($(this).val());
         let currentRoleObject = {
             "id": setRolesID($(this).val()),
-            "roleName": $(this).val()
+            "role": $(this).val()
         }
         selectedRoles.push(currentRoleObject);
     })
@@ -181,7 +181,7 @@ $("#editButton").click(function () {
             lastName: $("#editLastName").val(),
             age: $("#editAge").val(),
             email: $("#editEmail").val(),
-            pass: password,
+            password: password,
             roles: selectRoles("#editUsersRoles")
         };
 
@@ -208,7 +208,7 @@ $("#addNewUser-btn").click(function () {
         firstName: $("#addNewUserName").val(),
         lastName: $("#addNewUserLastName").val(),
         age: $("#addNewUserAge").val(),
-        pass: $("#addNewUserPass").val(),
+        password: $("#addNewUserPass").val(),
         email: $("#addNewUserEmail").val(),
         roles: selectRoles("#newUsersRoles")
     };

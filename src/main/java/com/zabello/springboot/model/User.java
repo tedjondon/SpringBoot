@@ -1,11 +1,13 @@
 package com.zabello.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
 
+@JsonIgnoreProperties
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {

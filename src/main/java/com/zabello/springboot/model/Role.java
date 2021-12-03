@@ -1,9 +1,11 @@
 package com.zabello.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.util.Set;
 
+@JsonIgnoreProperties
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -15,6 +17,7 @@ public class Role implements GrantedAuthority {
     @Column
     private String role;
 
+    @Transient
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
 
