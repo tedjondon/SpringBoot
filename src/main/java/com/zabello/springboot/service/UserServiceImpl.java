@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public void add(User user) {
+    public boolean add(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.add(user);
+        return userDao.add(user);
     }
 
     @Transactional(readOnly = true)

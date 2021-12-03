@@ -15,6 +15,6 @@ public class UsersController {
     public String show(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("user", user);
-        return "user-home";
+        return "user";
     }
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<nav class="navbar navbar-expand navbar-dark fixed-top bg-dark flex p-2 justify-content-between ">
+    <div  class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto  "> <!--px-3-->
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" th:text="${loggedInUser.getFirstName()}"> </a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" > With roles:</a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="text-white nav-link disabled" href="#" th:text="${#strings.replace(loggedInUser.getRoles(), 'ROLE_', '')}"></a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto"> <!--px-3-->
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
